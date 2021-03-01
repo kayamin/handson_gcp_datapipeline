@@ -1,0 +1,1 @@
+cost_allocation_tags = {"service": "handson-datapipeline"}
