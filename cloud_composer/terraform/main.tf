@@ -1,12 +1,17 @@
+locals {
+  labels = {
+    "project" = "cloud-composer"
+  }
+}
 resource "google_service_account" "cloud_composer" {
-  account_id   = "cloud_composer"
-  display_name = "cloud_composer"
+  account_id   = "cloud-composer"
+  display_name = "cloud-composer"
   description  = "A service account for cloud composer"
 }
 
 resource "google_project_iam_member" "cloud_composer" {
   for_each = toset([
-    "role/composer.worker"
+    "roles/composer.worker"
   ])
   role   = each.value
   member = "serviceAccount:${google_service_account.cloud_composer.email}"
@@ -19,10 +24,10 @@ resource "google_composer_environment" "main" {
 
   config {
     // airflow を実行するGKEノードの設定
-    node_count = 2
+    node_count = 3 // 最低３ノード
     node_config {
-      zone         = "asia-northeast1"
-      machine_type = "e2-small"
+      zone            = "asia-northeast1-a"
+      machine_type    = "e2-small"
       service_account = google_service_account.cloud_composer.email
     }
 
@@ -39,7 +44,7 @@ resource "google_composer_environment" "main" {
 
       // airflow で利用したい python パッケージを指定
       pypi_packages = {
-        numpy = ""
+        numpy  = ""
         pandas = ""
       }
 
@@ -52,4 +57,5 @@ resource "google_composer_environment" "main" {
     }
   }
 
+  labels = local.labels
 }
