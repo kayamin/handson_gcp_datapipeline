@@ -53,7 +53,6 @@ resource "google_composer_environment" "main" {
       // 利用する airflow のバージョンを指定可能
       // https://cloud.google.com/composer/docs/reference/rest/v1beta1/projects.locations.environments#softwareconfig
       // image_version = ""
-
     }
   }
 
